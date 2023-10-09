@@ -20,6 +20,10 @@ package org.apache.cassandra.cache;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Iterator;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -87,6 +91,24 @@ public class CaffeineCache<K extends IMeasurableMemory, V extends IMeasurableMem
     public int size()
     {
         return cache.asMap().size();
+    }
+
+    public void dump(String filename) {
+        try {
+            var f = new FileOutputStream(filename);
+            var osw = new OutputStreamWriter(f, "utf-8");
+            var writer = new BufferedWriter(osw);
+
+            writer.write("Capacity: " + capacity() + "\n");
+
+            for (var entry : cache.asMap().entrySet()) {
+                writer.write(entry.getKey().toString() + " == " + entry.getValue().toString() + "\n");
+            }
+
+            writer.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public long weightedSize()

@@ -31,6 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Iterator;
 
 /**
@@ -275,5 +278,23 @@ public class SerializingCache<K, V> implements ICache<K, V>
     public boolean containsKey(K key)
     {
         return cache.asMap().containsKey(key);
+    }
+
+    public void dump(String filename) {
+        try {
+            var f = new FileOutputStream(filename);
+            var osw = new OutputStreamWriter(f, "utf-8");
+            var writer = new BufferedWriter(osw);
+
+            writer.write("Capacity: " + capacity() + "\n");
+
+            for (var entry : cache.asMap().entrySet()) {
+                writer.write(entry.getKey().toString() + " == " + entry.getValue().toString() + "\n");
+            }
+
+            writer.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

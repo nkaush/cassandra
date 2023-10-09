@@ -49,6 +49,8 @@ public interface CacheServiceMBean
      */
     public void invalidateRowCache();
 
+    public void dumpRowCache(String filename);
+
     public void invalidateCounterCache();
 
     public void setRowCacheCapacityInMB(long capacity);

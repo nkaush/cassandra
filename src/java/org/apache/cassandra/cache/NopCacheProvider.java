@@ -94,5 +94,9 @@ public class NopCacheProvider implements CacheProvider<RowCacheKey, IRowCacheEnt
         {
             return false;
         }
+
+        public void dump(String filename) {
+            System.out.println("NOP cache has nothing in it so do nothing :)");
+        }
     }
 }

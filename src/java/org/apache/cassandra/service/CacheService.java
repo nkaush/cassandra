@@ -287,6 +287,10 @@ public class CacheService implements CacheServiceMBean
         }
     }
 
+    public void dumpRowCache(String filename) {
+        rowCache.dump(filename);
+    }
+
     public void invalidateRowCache()
     {
         rowCache.clear();

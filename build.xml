@@ -830,6 +830,25 @@
       </jar>
     </target>
 
+    <target name="cs497-resolve" depends="init,resolver-init,resolver-retrieve-build,resolver-dist-lib,write-poms">
+    </target>
+
+    <target name="cs497" depends="_main-jar,write-poms">
+      <!-- fix the control linefeed so that builds on windows works on linux -->
+      <fixcrlf srcdir="bin" includes="**/*" eol="lf" eof="remove" />
+      <fixcrlf srcdir="conf" includes="**/*" eol="lf" eof="remove" />
+      <fixcrlf srcdir="tools/bin" includes="**/*" eol="lf" eof="remove" />
+      <copy todir="${basedir}/lib">
+        <fileset dir="${build.lib}"/>
+        <fileset dir="${build.dir}">
+          <include name="${final.name}.jar" />
+        </fileset>
+      </copy>
+      <copy todir="${basedir}/lib">
+        <fileset dir="${build.dir.lib}/jars"/>
+      </copy>
+    </target>
+
     <target name="_artifacts-init" depends="jar">
       <mkdir dir="${dist.dir}"/>
       <!-- fix the control linefeed so that builds on windows works on linux -->

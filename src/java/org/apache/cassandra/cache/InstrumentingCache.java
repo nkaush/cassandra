@@ -122,4 +122,8 @@ public class InstrumentingCache<K, V>
     {
         return metrics;
     }
+
+    public void dump(String filename) {
+        map.dump(filename);
+    }
 }

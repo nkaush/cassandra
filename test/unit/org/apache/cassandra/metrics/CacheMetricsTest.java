@@ -97,6 +97,10 @@ public class CacheMetricsTest
     {
         private final Map<String,Object> map = new HashMap<>();
 
+        public void dump() {
+            
+        }
+
         public void put(String key, Object value)
         {
             map.put(key, value);

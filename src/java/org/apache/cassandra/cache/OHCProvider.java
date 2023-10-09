@@ -17,6 +17,9 @@
  */
 package org.apache.cassandra.cache;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
@@ -31,6 +34,10 @@ import org.apache.cassandra.io.util.RebufferingInputStream;
 import org.apache.cassandra.schema.TableId;
 import org.caffinitas.ohc.OHCache;
 import org.caffinitas.ohc.OHCacheBuilder;
+import org.caffinitas.ohc.DirectValueAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class OHCProvider implements CacheProvider<RowCacheKey, IRowCacheEntry>
 {
@@ -117,6 +124,33 @@ public class OHCProvider implements CacheProvider<RowCacheKey, IRowCacheEntry>
         public boolean containsKey(RowCacheKey key)
         {
             return ohCache.containsKey(key);
+        }
+
+        public void dump(String filename) {
+            try {
+                var f = new FileOutputStream(filename);
+                var osw = new OutputStreamWriter(f, "utf-8");
+                var writer = new BufferedWriter(osw);
+
+                writer.write("Capacity: " + ohCache.capacity() + "\n");
+
+                ValueSerializer ks = new ValueSerializer();
+                
+                var iter = ohCache.keyIterator();
+                while (iter.hasNext()) {
+                    RowCacheKey key = iter.next();
+                    DirectValueAccess dva = ohCache.getDirect(key, false);
+                    IRowCacheEntry entry = ks.deserialize(dva.buffer());
+                    writer.write(key.toString() + " == " + entry.toString() + "\n");
+
+                    dva.close();
+                }
+
+                iter.close();
+                writer.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 

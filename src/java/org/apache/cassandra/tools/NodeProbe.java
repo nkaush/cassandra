@@ -672,6 +672,10 @@ public class NodeProbe implements AutoCloseable
         rcProxy.invalidateRoles(roleName);
     }
 
+    public void dumpRowCache(String filename) {
+        cacheService.dumpRowCache(filename);
+    }
+
     public void invalidateRowCache()
     {
         cacheService.invalidateRowCache();

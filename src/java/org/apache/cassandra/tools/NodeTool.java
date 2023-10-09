@@ -120,6 +120,7 @@ public class NodeTool
                 DisableOldProtocolVersions.class,
                 Drain.class,
                 DropCIDRGroup.class,
+                DumpRowCache.class,
                 EnableAuditLog.class,
                 EnableAutoCompaction.class,
                 EnableBackup.class,

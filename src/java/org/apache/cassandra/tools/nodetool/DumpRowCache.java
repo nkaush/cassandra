@@ -15,34 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cassandra.cache;
+package org.apache.cassandra.tools.nodetool;
 
-import java.util.Iterator;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import io.airlift.airline.Command;
+import io.airlift.airline.Option;
+import io.airlift.airline.Arguments;
 
-/**
- * This is similar to the Map interface, but requires maintaining a given capacity
- * and does not require put or remove to return values, which lets SerializingCache
- * be more efficient by avoiding deserialize except on get.
- */
-public interface ICache<K, V> extends CacheSize
+import org.apache.cassandra.tools.NodeProbe;
+import org.apache.cassandra.tools.NodeTool.NodeToolCmd;
+
+@Command(name = "dumprowcache", description = "Dump the row cache")
+public class DumpRowCache extends NodeToolCmd
 {
-    public void put(K key, V value);
+    @Option(title = "file", name = "--file", description = "Filename to dump the cache to", required = true)
+    private String filename = EMPTY;
 
-    public boolean putIfAbsent(K key, V value);
-
-    public boolean replace(K key, V old, V value);
-
-    public V get(K key);
-
-    public void remove(K key);
-
-    public void clear();
-
-    public Iterator<K> keyIterator();
-
-    public Iterator<K> hotKeyIterator(int n);
-
-    public boolean containsKey(K key);
-
-    public void dump(String filename);
+    @Override
+    public void execute(NodeProbe probe)
+    {
+        probe.dumpRowCache(filename);
+    }
 }
