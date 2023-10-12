@@ -131,6 +131,10 @@ public class CacheMetricsTest
             map.clear();
         }
 
+        public void dump(String filename) {
+            
+        }
+
         public Iterator<String> keyIterator()
         {
             return map.keySet().iterator();

@@ -291,6 +291,12 @@ public class CacheService implements CacheServiceMBean
         rowCache.dump(filename);
     }
 
+    public void hardResetMetrics() {
+        keyCache.hardResetMetrics();
+        rowCache.hardResetMetrics();
+        counterCache.hardResetMetrics();
+    }
+
     public void invalidateRowCache()
     {
         rowCache.clear();

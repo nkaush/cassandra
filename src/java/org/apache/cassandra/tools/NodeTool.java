@@ -192,6 +192,7 @@ public class NodeTool
                 RemoveNode.class,
                 Repair.class,
                 ReplayBatchlog.class,
+                ResetCacheMetrics.class,
                 ResetFullQueryLog.class,
                 ResetLocalSchema.class,
                 ResumeHandoff.class,

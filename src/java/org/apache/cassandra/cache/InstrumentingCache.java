@@ -126,4 +126,8 @@ public class InstrumentingCache<K, V>
     public void dump(String filename) {
         map.dump(filename);
     }
+
+    public void hardResetMetrics() {
+        metrics.hardReset();
+    }
 }

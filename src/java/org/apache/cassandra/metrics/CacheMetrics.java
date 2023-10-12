@@ -39,20 +39,20 @@ public class CacheMetrics
     public final Gauge<Integer> entries;
 
     /** Total number of cache hits */
-    public final Meter hits;
+    public Meter hits;
     /** Total number of cache misses */
-    public final Meter misses;
+    public Meter misses;
     /** Total number of cache requests */
-    public final Meter requests;
+    public Meter requests;
 
     /** all time cache hit rate */
-    public final Gauge<Double> hitRate;
+    public Gauge<Double> hitRate;
     /** 1m hit rate */
-    public final Gauge<Double> oneMinuteHitRate;
+    public Gauge<Double> oneMinuteHitRate;
     /** 5m hit rate */
-    public final Gauge<Double> fiveMinuteHitRate;
+    public Gauge<Double> fiveMinuteHitRate;
     /** 15m hit rate */
-    public final Gauge<Double> fifteenMinuteHitRate;
+    public Gauge<Double> fifteenMinuteHitRate;
 
     protected final MetricNameFactory factory;
 
@@ -98,6 +98,33 @@ public class CacheMetrics
         hits.mark(-hits.getCount());
         misses.mark(-misses.getCount());
         requests.mark(-requests.getCount());
+    }
+
+    public void hardReset() {
+        Metrics.remove(factory.createMetricName("Hits"));
+        Metrics.remove(factory.createMetricName("Misses"));
+        Metrics.remove(factory.createMetricName("Requests"));
+        Metrics.remove(factory.createMetricName("HitRate"));
+        Metrics.remove(factory.createMetricName("OneMinuteHitRate"));
+        Metrics.remove(factory.createMetricName("FiveMinuteHitRate"));
+        Metrics.remove(factory.createMetricName("FifteenMinuteHitRate"));
+
+        hits = Metrics.meter(factory.createMetricName("Hits"));
+        misses = Metrics.meter(factory.createMetricName("Misses"));
+        requests = Metrics.meter(factory.createMetricName("Requests"));
+
+        hitRate =
+            Metrics.register(factory.createMetricName("HitRate"),
+                             ratioGauge(hits::getCount, requests::getCount));
+        oneMinuteHitRate =
+            Metrics.register(factory.createMetricName("OneMinuteHitRate"),
+                             ratioGauge(hits::getOneMinuteRate, requests::getOneMinuteRate));
+        fiveMinuteHitRate =
+            Metrics.register(factory.createMetricName("FiveMinuteHitRate"),
+                             ratioGauge(hits::getFiveMinuteRate, requests::getFiveMinuteRate));
+        fifteenMinuteHitRate =
+            Metrics.register(factory.createMetricName("FifteenMinuteHitRate"),
+                             ratioGauge(hits::getFifteenMinuteRate, requests::getFifteenMinuteRate));
     }
 
     private static RatioGauge ratioGauge(DoubleSupplier numeratorSupplier, DoubleSupplier denominatorSupplier)

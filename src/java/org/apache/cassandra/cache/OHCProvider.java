@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 import org.apache.cassandra.config.DatabaseDescriptor;
@@ -139,11 +140,11 @@ public class OHCProvider implements CacheProvider<RowCacheKey, IRowCacheEntry>
                 var iter = ohCache.keyIterator();
                 while (iter.hasNext()) {
                     RowCacheKey key = iter.next();
-                    DirectValueAccess dva = ohCache.getDirect(key, false);
-                    IRowCacheEntry entry = ks.deserialize(dva.buffer());
-                    writer.write(key.toString() + " == " + entry.toString() + "\n");
-
-                    dva.close();
+                    String keyStr = new String(key.key, StandardCharsets.UTF_8);
+                    // DirectValueAccess dva = ohCache.getDirect(key, false);
+                    // IRowCacheEntry entry = ks.deserialize(dva.buffer());
+                    writer.write(keyStr + "\n");
+                    // dva.close();
                 }
 
                 iter.close();

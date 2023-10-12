@@ -676,6 +676,10 @@ public class NodeProbe implements AutoCloseable
         cacheService.dumpRowCache(filename);
     }
 
+    public void resetCacheMetrics() {
+        cacheService.hardResetMetrics();
+    }
+
     public void invalidateRowCache()
     {
         cacheService.invalidateRowCache();
