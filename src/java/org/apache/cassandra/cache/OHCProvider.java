@@ -134,17 +134,12 @@ public class OHCProvider implements CacheProvider<RowCacheKey, IRowCacheEntry>
                 var writer = new BufferedWriter(osw);
 
                 writer.write("Capacity: " + ohCache.capacity() + "\n");
-
-                ValueSerializer ks = new ValueSerializer();
                 
                 var iter = ohCache.keyIterator();
                 while (iter.hasNext()) {
                     RowCacheKey key = iter.next();
                     String keyStr = new String(key.key, StandardCharsets.UTF_8);
-                    // DirectValueAccess dva = ohCache.getDirect(key, false);
-                    // IRowCacheEntry entry = ks.deserialize(dva.buffer());
                     writer.write(keyStr + "\n");
-                    // dva.close();
                 }
 
                 iter.close();
