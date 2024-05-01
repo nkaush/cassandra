@@ -129,11 +129,18 @@ public class OHCProvider implements CacheProvider<RowCacheKey, IRowCacheEntry>
 
         public void dump(String filename) {
             try {
+                var stats_file = new FileOutputStream(filename + ".stats");
+                var stats_osw = new OutputStreamWriter(stats_file, "utf-8");
+                var stats_writer = new BufferedWriter(stats_osw);
+                stats_writer.write("Capacity: " + ohCache.capacity() + "\n");
+                stats_writer.write("Size: " + ohCache.size() + "\n");
+                stats_writer.write("MemUsed: " + ohCache.memUsed() + "\n");
+                // stats_writer.write("Stats: " + ohCache.stats().toString() + "\n");
+                stats_writer.close();
+
                 var f = new FileOutputStream(filename);
                 var osw = new OutputStreamWriter(f, "utf-8");
                 var writer = new BufferedWriter(osw);
-
-                writer.write("Capacity: " + ohCache.capacity() + "\n");
                 
                 var iter = ohCache.keyIterator();
                 while (iter.hasNext()) {
